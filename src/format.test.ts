@@ -2,6 +2,7 @@ import { expect, test } from 'vitest'
 import { formatName, sanitize, uniqueName, type FileInfo } from './format.ts'
 
 const bill: FileInfo = {
+  kind: 'bill',
   date: '2026-05-01',
   vendor: 'Helsana',
   person: 'Anton',
@@ -25,9 +26,38 @@ test('skips missing parts', () => {
   expect(formatName({ ...bill, date: '01.05.2026' })).toBe('Helsana - Anton - 209.00 CHF')
 })
 
+test('formats a document with a title', () => {
+  const doc: FileInfo = {
+    ...bill,
+    kind: 'document',
+    description: 'Insurance Card',
+    amount: null,
+    currency: null,
+  }
+  expect(formatName(doc)).toBe('2026-05-01 Helsana - Anton - Insurance Card')
+})
+
+test('falls back to a generic title for documents', () => {
+  const doc: FileInfo = {
+    ...bill,
+    kind: 'document',
+    description: null,
+    amount: null,
+    currency: null,
+  }
+  expect(formatName(doc)).toBe('2026-05-01 Helsana - Anton - Document')
+})
+
+test('keeps an amount even when the model calls it a document', () => {
+  expect(formatName({ ...bill, kind: 'document', description: 'Statement' })).toBe(
+    '2026-05-01 Helsana - Anton - Statement - 209.00 CHF',
+  )
+})
+
 test('returns null when nothing to name', () => {
   expect(
     formatName({
+      kind: 'bill',
       date: '2026-05-01',
       vendor: null,
       person: null,

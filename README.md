@@ -18,15 +18,25 @@ scan_0042.pdf        → 2026-01-28 Werke am Zürichsee - Electricity - 384.20 C
 
 ## Naming
 
+nameit tells bills apart from other documents. Bills get an amount, documents get a title:
+
 ```
-YYYY-MM-DD Vendor - Person - Description - Amount Currency.ext
+YYYY-MM-DD Vendor - Person - Description - Amount Currency.ext   bills
+YYYY-MM-DD Issuer - Person - Title.ext                           documents
 ```
 
-- **Date**: the invoice date.
-- **Vendor**: a short issuer name.
-- **Person**: the first name of the person the bill is for, when the bill names one.
-- **Description**: in English, and only when it adds something.
-- **Amount**: the total.
+```
+2026-05-01 Helsana - Anton - 209.00 CHF.pdf
+2026-01-28 Werke am Zürichsee - Electricity - 384.20 CHF.pdf
+2026-03-14 Kanton Zürich - Anton - Tax Assessment 2025.pdf
+2026-08-06 Hofer - Anton - Honda CB500 Purchase.pdf
+```
+
+- **Date**: the invoice or issue date.
+- **Vendor/Issuer**: a short name.
+- **Person**: the first name of the person the document is for, when it names one.
+- **Description**: in English. For a bill it appears only when it adds something; a document always has a title.
+- **Amount**: the total, bills only.
 
 Missing parts are skipped. Vendor and person spellings follow the existing file names in the same folder, so repeat bills
 stay consistent.

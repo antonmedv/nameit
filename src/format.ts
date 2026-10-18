@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 export const FileInfo = z.object({
+  kind: z.enum(['bill', 'document']),
   date: z.string().nullable(),
   vendor: z.string().nullable(),
   person: z.string().nullable(),
@@ -11,7 +12,8 @@ export const FileInfo = z.object({
 
 export type FileInfo = z.infer<typeof FileInfo>
 
-// Builds "YYYY-MM-DD Vendor - Person - Description - 12.34 CHF".
+// Bills: "YYYY-MM-DD Vendor - Person - Description - 12.34 CHF".
+// Documents: "YYYY-MM-DD Issuer - Person - Title".
 export function formatName(info: FileInfo): string | null {
   const date = /^\d{4}-\d{2}-\d{2}$/.test(info.date ?? '') ? info.date : null
   const money =
@@ -19,7 +21,8 @@ export function formatName(info: FileInfo): string | null {
       ? null
       : [info.amount.toFixed(2), info.currency?.toUpperCase()].filter(Boolean).join(' ')
   const person = info.person?.trim().split(/\s+/)[0]
-  const main = [info.vendor, person, info.description, money]
+  const description = info.description?.trim() || (info.kind === 'document' ? 'Document' : null)
+  const main = [info.vendor, person, description, money]
     .map((s) => sanitize(s ?? ''))
     .filter(Boolean)
     .join(' - ')

@@ -26,13 +26,16 @@ export type Provider = {
   extract(req: Request): Promise<FileInfo>
 }
 
-const SYSTEM = `You name files, mostly scanned bills and invoices. Extract these fields from the document:
+const SYSTEM = `You name files: mostly scanned bills and invoices, and sometimes other documents. Extract these fields:
 
-- date: the invoice/bill issue date as YYYY-MM-DD. For other documents, the document's main date. null if none.
-- vendor: the shortest recognizable name of the issuer, usually one or two words: "Helsana" not "Helsana Versicherungen AG", "Mamut" not "Mamut-Center Margariti". For non-bills, the organization or subject.
-- person: first name of the person the service is for (patient, student, insured person, child), if the document names one. Not the account holder or addressee of a household bill such as electricity, rent, taxes or fines. null otherwise.
-- description: 1-3 English words in Title Case, only if they add information beyond vendor and person, e.g. "Electricity", "Car Insurance", "Speeding Fine", "Drawing Lessons". null for routine recurring bills where the vendor says enough.
-- amount: total amount due or paid, as a number. null if the document is not a bill.
+- kind: "bill" if the document states an amount to pay or that was paid (invoice, receipt, premium notice, fine, payment slip, or a statement or policy with an amount due), whatever its title. "document" for everything else (contract, letter, certificate, report, ID, form, informational statement).
+- date: for bills, the invoice issue date; for documents, the date the document was issued or signed. YYYY-MM-DD, or null if there is none.
+- vendor: the shortest recognizable name of the issuer, usually one or two words: "Helsana" not "Helsana Versicherungen AG", "Mamut" not "Mamut-Center Margariti", "Kanton Zürich" not "Kantonales Steueramt Zürich". Keep diacritics.
+- person: first name of the person the document is about or the service is for (patient, student, insured person, child, ID holder), if it names one. Not the account holder or addressee of a household bill such as electricity, rent, taxes or fines. null otherwise.
+- description: English words in Title Case.
+  - Bills: 1-3 words, only if it adds information beyond vendor and person, e.g. "Electricity", "Car Insurance", "Speeding Fine", "Drawing Lessons". null for routine recurring bills where the vendor says enough.
+  - Documents: 1-4 words, always set; the document's title or type, with a year or subject if relevant, e.g. "Tax Assessment 2025", "Car Insurance Policy", "Rental Contract", "School Report".
+- amount: bills only, the total amount due or paid, as a number. null for documents.
 - currency: ISO code, e.g. CHF, EUR. null if no amount.
 
 Use Latin script for every field; transliterate other scripts. Write the description in English even if the document is in another language.

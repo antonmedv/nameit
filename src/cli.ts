@@ -8,8 +8,10 @@ import { pickProvider, type Content, type Provider } from './llm.ts'
 
 const HELP = `Usage: nameit [options] <file...>
 
-Renames files (mostly PDF bills) to "YYYY-MM-DD Vendor - Person - 12.34 CHF.pdf"
-using Anthropic or OpenAI, whichever API key is set.
+Renames files using Anthropic or OpenAI, whichever API key is set:
+
+  Bills      YYYY-MM-DD Vendor - Person - Description - 12.34 CHF.pdf
+  Documents  YYYY-MM-DD Issuer - Person - Title.pdf
 
 Options:
   -n, --dry-run      Print new names without renaming
