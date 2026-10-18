@@ -3,7 +3,7 @@
 Rename scanned bills (and other files) with AI.
 
 ```sh
-npm i -g nameit
+npm i -g @medv/nameit
 ```
 
 ```sh

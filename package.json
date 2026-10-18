@@ -1,5 +1,5 @@
 {
-  "name": "nameit",
+  "name": "@medv/nameit",
   "version": "0.1.0",
   "description": "Rename PDF bills and other files with AI",
   "license": "MIT",
@@ -37,5 +37,8 @@
   },
   "engines": {
     "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
