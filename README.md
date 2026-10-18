@@ -62,6 +62,36 @@ file name alone.
 | `NAMEIT_PROVIDER`   | Force `anthropic` or `openai`                                  |
 | `NAMEIT_MODEL`      | Override the model                                             |
 
+## Finder Quick Action
+
+Rename files from Finder with right-click → **Quick Actions** → **Rename with AI**.
+
+Scripts run from Shortcuts don't load your shell profile, so store the API key in the Keychain:
+
+```sh
+security add-generic-password -a "$USER" -s OPENAI_API_KEY -w "sk-..."
+```
+
+1. In Shortcuts → Settings → Advanced, turn on **Allow Running Scripts**.
+2. Create a new shortcut named "Rename with AI".
+3. In its **ⓘ** Details panel, turn on **Use as Quick Action** and select **Finder**.
+4. Set it to receive **Files** from **Quick Actions**.
+5. Add a **Run Shell Script** action. Set Shell to `zsh`, Input to `Shortcut Input` and Pass input to **as arguments**,
+   and enter:
+
+   ```sh
+   export PATH=/opt/homebrew/bin:$PATH
+   export OPENAI_API_KEY=$(security find-generic-password -s OPENAI_API_KEY -w)
+   nameit "$@" 2>&1
+   ```
+
+6. Optional: add **Show Notification** with **Shell Script Result** to see the new names.
+
+The first run asks for Keychain and folder access; choose **Always Allow**. For Anthropic, use `ANTHROPIC_API_KEY` in
+place of `OPENAI_API_KEY` in both places.
+
+To set a keyboard shortcut, go to System Settings → Keyboard → Keyboard Shortcuts → Services → Files and Folders.
+
 ## License
 
 [MIT](LICENSE)
